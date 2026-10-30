@@ -4,7 +4,12 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 
-from app.calculations import PerilResult, calculate_portfolio
+from app.calculations import (
+	PerilResult,
+	PortfolioResult,
+	calculate_all_portfolios,
+	calculate_portfolio,
+)
 from app.data_loader import LoadedData, load_data
 
 
@@ -27,6 +32,21 @@ class PortfolioLossExperience(BaseModel):
 	results: list[PerilLossExperience]
 
 
+class PortfolioSummary(BaseModel):
+	portfolio_id: str
+	policy_count: int
+	earned_premium_dkk: float
+	incurred_loss_dkk: float
+	loss_ratio: float | None
+	claim_count: int
+	largest_claim_dkk: float | None
+
+
+class PortfolioComparison(BaseModel):
+	currency: str
+	results: list[PortfolioSummary]
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 	app.state.data = load_data(DATA_DIR)
@@ -37,6 +57,23 @@ app = FastAPI(
 	title="Envira Loss Experience Service",
 	lifespan=lifespan,
 )
+
+
+@app.get(
+	"/portfolios/loss-experience",
+	response_model=PortfolioComparison,
+)
+def get_all_portfolio_loss_experience(
+	request: Request,
+) -> PortfolioComparison:
+	data: LoadedData = request.app.state.data
+	return PortfolioComparison(
+		currency="DKK",
+		results=[
+			_summary_to_response(result)
+			for result in calculate_all_portfolios(data)
+		],
+	)
 
 
 @app.get(
@@ -62,6 +99,18 @@ def get_portfolio_loss_experience(
 def _to_response(result: PerilResult) -> PerilLossExperience:
 	return PerilLossExperience(
 		peril=result.peril,
+		policy_count=result.policy_count,
+		earned_premium_dkk=result.earned_premium_dkk,
+		incurred_loss_dkk=result.incurred_loss_dkk,
+		loss_ratio=result.loss_ratio,
+		claim_count=result.claim_count,
+		largest_claim_dkk=result.largest_claim_dkk,
+	)
+
+
+def _summary_to_response(result: PortfolioResult) -> PortfolioSummary:
+	return PortfolioSummary(
+		portfolio_id=result.portfolio_id,
 		policy_count=result.policy_count,
 		earned_premium_dkk=result.earned_premium_dkk,
 		incurred_loss_dkk=result.incurred_loss_dkk,

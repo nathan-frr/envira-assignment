@@ -20,6 +20,17 @@ class PerilResult:
     largest_claim_dkk: Decimal | None
 
 
+@dataclass(frozen=True)
+class PortfolioResult:
+    portfolio_id: str
+    policy_count: int
+    earned_premium_dkk: Decimal
+    incurred_loss_dkk: Decimal
+    loss_ratio: Decimal | None
+    claim_count: int
+    largest_claim_dkk: Decimal | None
+
+
 def calculate_portfolio(data: LoadedData, portfolio_id: str) -> list[PerilResult]:
     """Calculate loss experience by peril for one portfolio.
 
@@ -65,6 +76,59 @@ def calculate_portfolio(data: LoadedData, portfolio_id: str) -> list[PerilResult
         )
         for peril in sorted(policy_count_by_peril)
     ]
+
+
+def calculate_portfolio_summary(
+    data: LoadedData, portfolio_id: str
+) -> PortfolioResult:
+    """Aggregate one portfolio across all of its perils."""
+    peril_results = calculate_portfolio(data, portfolio_id)
+    if not peril_results:
+        return PortfolioResult(
+            portfolio_id=portfolio_id,
+            policy_count=0,
+            earned_premium_dkk=Decimal("0.00"),
+            incurred_loss_dkk=Decimal("0.00"),
+            loss_ratio=None,
+            claim_count=0,
+            largest_claim_dkk=None,
+        )
+
+    earned_premium = sum(
+        (result.earned_premium_dkk for result in peril_results), Decimal("0")
+    )
+    incurred_loss = sum(
+        (result.incurred_loss_dkk for result in peril_results), Decimal("0")
+    )
+    largest_claims = [
+        result.largest_claim_dkk
+        for result in peril_results
+        if result.largest_claim_dkk is not None
+    ]
+    return PortfolioResult(
+        portfolio_id=portfolio_id,
+        policy_count=sum(result.policy_count for result in peril_results),
+        earned_premium_dkk=earned_premium,
+        incurred_loss_dkk=incurred_loss,
+        loss_ratio=_loss_ratio(earned_premium, incurred_loss),
+        claim_count=sum(result.claim_count for result in peril_results),
+        largest_claim_dkk=max(largest_claims) if largest_claims else None,
+    )
+
+
+def calculate_all_portfolios(data: LoadedData) -> list[PortfolioResult]:
+    """Return all portfolios ranked by loss ratio and incurred loss."""
+    portfolio_ids = sorted(data.assets["portfolio_id"].unique())
+    results = [calculate_portfolio_summary(data, portfolio_id) for portfolio_id in portfolio_ids]
+    return sorted(
+        results,
+        key=lambda result: (
+            result.loss_ratio is None,
+            -(result.loss_ratio or Decimal("0")),
+            -result.incurred_loss_dkk,
+            result.portfolio_id,
+        ),
+    )
 
 
 def _calculate_claims(
