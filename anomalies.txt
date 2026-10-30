@@ -1,0 +1,119 @@
+
+=== 1. DATE INVESTIGATION ===
+
+loss_date
+Invalid dates: 0
+Examples:
+[]
+
+reported_date
+Invalid dates: 0
+Examples:
+[]
+
+=== 2. NEGATIVE CLAIM AMOUNTS ===
+
+paid_amount
+Negative records: 262
+  claim_id  policy_id  paid_amount currency  status
+CLM-900874 POL-502490      -216.44      EUR settled
+CLM-900320 POL-500899     -6725.27      DKK settled
+CLM-901476 POL-504077     -2377.65      DKK settled
+CLM-900283 POL-500807     -2164.37      DKK settled
+CLM-902442 POL-506588    -12904.50      DKK settled
+CLM-903725 POL-510075     -3213.32      DKK settled
+CLM-900005 POL-500026     -1527.89      DKK settled
+CLM-903734 POL-510104    -22532.98      DKK settled
+CLM-902025 POL-505591     -1576.82      EUR settled
+CLM-902772 POL-507429      -620.85      EUR settled
+CLM-902744 POL-507402   -114444.05      DKK settled
+CLM-902887 POL-507760     -4235.95      DKK settled
+CLM-903655 POL-509918     -3932.20      DKK settled
+CLM-902471 POL-506692    -25996.22      DKK settled
+CLM-900174 POL-500490    -15748.23      DKK settled
+CLM-903749 POL-510134     -4610.59      DKK settled
+CLM-902463 POL-506659     -4798.16      DKK settled
+CLM-903975 POL-510811     -1283.23      DKK settled
+CLM-900249 POL-500671     -1948.53      DKK settled
+CLM-903735 POL-510105     -3058.91      DKK settled
+
+reserve_amount
+Negative records: 0
+Empty DataFrame
+Columns: [claim_id, policy_id, reserve_amount, currency, status]
+Index: []
+
+=== 3. INVALID RELATIONSHIPS ===
+Policies with missing assets: 0
+Claims with missing policies: 260
+
+=== 4. FX RATE COVERAGE ===
+FX month range: 2020-01 to 2026-12
+Duplicate FX month/currency combinations: 0
+Non-positive FX rates: 0
+
+=== 5. POLICY DATE VALIDATION ===
+Policies with invalid date ranges: 0
+
+=== 6. CLAIM STATUS / AMOUNT CHECKS ===
+          paid_amount                                    reserve_amount                                
+                count          sum        min        max          count          sum     min        max
+status                                                                                                 
+declined          246         0.00       0.00       0.00            246         0.00    0.00       0.00
+open             1031   4904010.19       0.57  110890.60           1031  11889327.92  123.26  424550.65
+settled          2905  48052740.23 -218151.44  285819.83           2905   2216642.43    0.00   74912.26
+withdrawn         327         0.00       0.00       0.00            327         0.00    0.00       0.00
+
+=== ORPHANED CLAIM DETAILS ===
+Total orphaned claims: 260
+
+Orphaned claims by status:
+status
+settled    260
+Name: count, dtype: int64
+
+Orphaned claims by currency:
+currency
+DKK    260
+Name: count, dtype: int64
+
+Orphaned claims by loss year:
+loss_date
+2023    260
+Name: count, dtype: int64
+
+Orphaned claims financial amounts:
+        paid_amount  reserve_amount
+count    260.000000           260.0
+mean   44856.881423             0.0
+std    23973.267178             0.0
+min     5532.000000             0.0
+25%    24660.772500             0.0
+50%    43686.050000             0.0
+75%    65568.940000             0.0
+max    89908.220000             0.0
+
+Sample orphaned claims:
+  claim_id  policy_id  loss_date reported_date  paid_amount  reserve_amount currency  status
+CLM-904269 POL-914645 2023-07-17    2023-07-26     67408.38             0.0      DKK settled
+CLM-904505 POL-942427 2023-01-04    2023-01-13     50258.81             0.0      DKK settled
+CLM-904282 POL-918764 2023-04-15    2023-04-24      8236.77             0.0      DKK settled
+CLM-904373 POL-992026 2023-12-09    2023-12-18     57838.55             0.0      DKK settled
+CLM-904433 POL-979295 2023-07-11    2023-07-20     28131.12             0.0      DKK settled
+CLM-904384 POL-954537 2023-01-12    2023-01-21     83428.77             0.0      DKK settled
+CLM-904335 POL-931163 18-08-2023    2023-08-27     56202.94             0.0      DKK settled
+CLM-904256 POL-902421 2023-10-09    2023-10-18     12089.77             0.0      DKK settled
+CLM-904426 POL-937581 2023-10-14    2023-10-23     53736.95             0.0      DKK settled
+CLM-904272 POL-972165 2023-06-06    2023-06-15     12042.34             0.0      DKK settled
+CLM-904432 POL-906397 2023-11-12    2023-11-21     37267.63             0.0      DKK settled
+CLM-904293 POL-948749 2023-04-26    2023-05-05      5611.31             0.0      DKK settled
+CLM-904372 POL-989797 2023-06-17    26-06-2023     35763.46             0.0      DKK settled
+CLM-904419 POL-923960 2023-11-19    2023-11-28     59724.72             0.0      DKK settled
+CLM-904347 POL-901087 2023-01-12    2023-01-21     59432.91             0.0      DKK settled
+CLM-904413 POL-907354 2023-04-11    2023-04-20     46833.92             0.0      DKK settled
+CLM-904252 POL-973666 2023-02-05    2023-02-14     33191.17             0.0      DKK settled
+CLM-904350 POL-948493 2023-01-14    2023-01-23     17925.69             0.0      DKK settled
+CLM-904348 POL-992194 2023-10-13    2023-10-22     26991.94             0.0      DKK settled
+CLM-904337 POL-926149 2023-03-16    2023-03-25     83325.25             0.0      DKK settled
+
+Investigation complete.

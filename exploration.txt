@@ -1,0 +1,406 @@
+ENVIRA DATA EXPLORATION
+Data directory: C:\Users\natha\Desktop\envira-assignment\data
+
+==========================================================================================
+FILE: assets.csv
+==========================================================================================
+
+Rows: 4,200
+Columns: 6
+Memory usage: 1014.01 KB
+
+--- SCHEMA ---
+asset_id                 str
+portfolio_id             str
+region                   str
+asset_type               str
+construction_year      int64
+sum_insured_dkk      float64
+
+--- FIRST 5 ROWS ---
+  asset_id portfolio_id      region  asset_type  construction_year  sum_insured_dkk
+AST-100000        PF-01  Syddanmark residential               1907        3979000.0
+AST-100001        PF-06 Hovedstaden  commercial               1926        6592000.0
+AST-100002        PF-01 Nordjylland      public               1896        1246000.0
+AST-100003        PF-05 Nordjylland residential               1999        2206000.0
+AST-100004        PF-06 Midtjylland      public               2020        1606000.0
+
+--- MISSING VALUES ---
+No missing values
+
+--- DUPLICATES ---
+Fully duplicated rows: 0
+
+--- COLUMN CARDINALITY ---
+asset_id: 4200 unique values
+portfolio_id: 12 unique values
+region: 5 unique values
+asset_type: 5 unique values
+construction_year: 133 unique values
+sum_insured_dkk: 2960 unique values
+
+--- CATEGORICAL / LOW CARDINALITY VALUES ---
+
+portfolio_id:
+portfolio_id
+PF-09    392
+PF-04    375
+PF-06    368
+PF-05    359
+PF-12    355
+PF-02    353
+PF-01    352
+PF-07    345
+PF-08    337
+PF-03    335
+PF-11    319
+PF-10    310
+
+region:
+region
+Midtjylland    861
+Nordjylland    855
+Sjaelland      840
+Syddanmark     822
+Hovedstaden    822
+
+asset_type:
+asset_type
+agricultural    873
+industrial      865
+public          861
+residential     817
+commercial      784
+
+--- POTENTIAL DUPLICATE IDENTIFIERS ---
+asset_id: 0 rows with duplicated IDs
+
+--- DATE COLUMNS ---
+
+--- NUMERIC SUMMARY ---
+       construction_year  sum_insured_dkk
+count        4200.000000     4.200000e+03
+mean         1955.647381     2.958951e+06
+std            38.307304     2.518994e+06
+min          1890.000000     1.490000e+05
+25%          1922.000000     1.328750e+06
+50%          1955.000000     2.239000e+06
+75%          1988.000000     3.747250e+06
+max          2022.000000     3.742900e+07
+
+--- NEGATIVE NUMERIC VALUES ---
+
+==========================================================================================
+FILE: policies.csv
+==========================================================================================
+
+Rows: 11,560
+Columns: 7
+Memory usage: 3958.89 KB
+
+--- SCHEMA ---
+policy_id             str
+asset_id              str
+peril                 str
+inception_date        str
+expiry_date           str
+annual_premium    float64
+currency              str
+
+--- FIRST 5 ROWS ---
+ policy_id   asset_id peril inception_date expiry_date  annual_premium currency
+POL-500001 AST-100000 storm     2023-06-19  2024-06-18        10038.67      DKK
+POL-500002 AST-100001  hail     2023-03-20  2024-03-19        10277.31      DKK
+POL-500003 AST-100001  fire     2022-07-22  2023-07-21         5771.08      DKK
+POL-500004 AST-100001  fire     2023-03-19  2024-03-18         6782.23      DKK
+POL-500005 AST-100001  fire     2024-02-09  2025-02-08         5742.08      DKK
+
+--- MISSING VALUES ---
+No missing values
+
+--- DUPLICATES ---
+Fully duplicated rows: 0
+
+--- COLUMN CARDINALITY ---
+policy_id: 11560 unique values
+asset_id: 4200 unique values
+peril: 25 unique values
+inception_date: 996 unique values
+expiry_date: 996 unique values
+annual_premium: 11483 unique values
+currency: 2 unique values
+
+--- CATEGORICAL / LOW CARDINALITY VALUES ---
+
+peril:
+peril
+flood           2153
+storm           2045
+hail            2037
+subsidence      2027
+fire            1977
+SUBSIDENCE        83
+ flood            77
+Flood             77
+STORM             77
+HAIL              77
+ subsidence       75
+ fire             74
+Storm             72
+FIRE              71
+Fire              68
+FLOOD             67
+ hail             65
+fire              63
+Hail              61
+ storm            61
+Subsidence        58
+flood             54
+storm             48
+hail              47
+subsidence        46
+
+currency:
+currency
+DKK    9146
+EUR    2414
+
+--- NORMALIZED PERILS ---
+
+Normalized peril counts:
+peril
+flood         2428
+storm         2303
+subsidence    2289
+hail          2287
+fire          2253
+
+Original distinct values: 25
+Normalized distinct values: 5
+
+--- POTENTIAL DUPLICATE IDENTIFIERS ---
+asset_id: 10519 rows with duplicated IDs
+policy_id: 0 rows with duplicated IDs
+
+--- DATE COLUMNS ---
+
+inception_date
+Invalid/missing dates: 0
+Minimum: 2022-01-01 00:00:00
+Maximum: 2024-12-28 00:00:00
+
+expiry_date
+Invalid/missing dates: 0
+Minimum: 2022-12-31 00:00:00
+Maximum: 2025-12-27 00:00:00
+
+--- NUMERIC SUMMARY ---
+       annual_premium
+count    11560.000000
+mean      5680.780450
+std       6973.409747
+min         34.040000
+25%       1436.770000
+50%       3478.975000
+75%       7163.707500
+max      90388.050000
+
+--- NEGATIVE NUMERIC VALUES ---
+
+==========================================================================================
+FILE: claims.csv
+==========================================================================================
+
+Rows: 4,509
+Columns: 8
+Memory usage: 1583.18 KB
+
+--- SCHEMA ---
+claim_id              str
+policy_id             str
+loss_date             str
+reported_date         str
+paid_amount       float64
+reserve_amount    float64
+currency              str
+status                str
+
+--- FIRST 5 ROWS ---
+  claim_id  policy_id  loss_date reported_date  paid_amount  reserve_amount currency    status
+CLM-900128 POL-500373 2024-08-01    2024-08-30         0.00             0.0      DKK  declined
+CLM-900806 POL-502287 2023-10-19    2023-11-28      7544.17             0.0      DKK   settled
+CLM-902650 POL-507144 2023-03-11    2023-03-24     20789.53             0.0      DKK   settled
+CLM-903283 POL-508931 2023-08-17    2023-09-08      1910.86             0.0      DKK   settled
+CLM-900419 POL-501139 2023-01-25    14-02-2023         0.00             0.0      DKK withdrawn
+
+--- MISSING VALUES ---
+No missing values
+
+--- DUPLICATES ---
+Fully duplicated rows: 0
+
+--- COLUMN CARDINALITY ---
+claim_id: 4509 unique values
+policy_id: 3156 unique values
+loss_date: 1590 unique values
+reported_date: 1594 unique values
+paid_amount: 3933 unique values
+reserve_amount: 1752 unique values
+currency: 2 unique values
+status: 4 unique values
+
+--- CATEGORICAL / LOW CARDINALITY VALUES ---
+
+currency:
+currency
+DKK    4251
+EUR     258
+
+status:
+status
+settled      2905
+open         1031
+withdrawn     327
+declined      246
+
+--- POTENTIAL DUPLICATE IDENTIFIERS ---
+policy_id: 2239 rows with duplicated IDs
+claim_id: 0 rows with duplicated IDs
+
+--- DATE COLUMNS ---
+
+loss_date
+Invalid/missing dates: 0
+Minimum: 2020-12-30 00:00:00
+Maximum: 2025-12-06 00:00:00
+
+reported_date
+Invalid/missing dates: 0
+Minimum: 2021-01-05 00:00:00
+Maximum: 2025-12-19 00:00:00
+
+--- NUMERIC SUMMARY ---
+         paid_amount  reserve_amount
+count    4509.000000     4509.000000
+mean    11744.677405     3128.403271
+std     22881.559902    11585.647304
+min   -218151.440000        0.000000
+25%       665.310000        0.000000
+50%      4748.930000        0.000000
+75%     13973.180000     2026.520000
+max    285819.830000   424550.650000
+
+--- NEGATIVE NUMERIC VALUES ---
+
+paid_amount: 262 negative values
+[-216.44, -6725.27, -2377.65, -2164.37, -12904.5, -3213.32, -1527.89, -22532.98, -1576.82, -620.85]
+
+==========================================================================================
+FILE: fx_rates.csv
+==========================================================================================
+
+Rows: 168
+Columns: 3
+Memory usage: 19.16 KB
+
+--- SCHEMA ---
+month                    str
+currency                 str
+rate_dkk_per_unit    float64
+
+--- FIRST 5 ROWS ---
+  month currency  rate_dkk_per_unit
+2020-01      EUR             7.4568
+2020-01      DKK             1.0000
+2020-02      EUR             7.4551
+2020-02      DKK             1.0000
+2020-03      EUR             7.4574
+
+--- MISSING VALUES ---
+No missing values
+
+--- DUPLICATES ---
+Fully duplicated rows: 0
+
+--- COLUMN CARDINALITY ---
+month: 84 unique values
+currency: 2 unique values
+rate_dkk_per_unit: 75 unique values
+
+--- CATEGORICAL / LOW CARDINALITY VALUES ---
+
+currency:
+currency
+EUR    84
+DKK    84
+
+--- POTENTIAL DUPLICATE IDENTIFIERS ---
+
+--- DATE COLUMNS ---
+
+month
+Invalid/missing dates: 0
+Minimum: 2020-01-01 00:00:00
+Maximum: 2026-12-01 00:00:00
+
+--- NUMERIC SUMMARY ---
+       rate_dkk_per_unit
+count         168.000000
+mean            4.222949
+std             3.232589
+min             1.000000
+25%             1.000000
+50%             4.216200
+75%             7.447200
+max             7.458800
+
+--- NEGATIVE NUMERIC VALUES ---
+
+==========================================================================================
+RELATIONSHIP CHECKS
+==========================================================================================
+
+--- POLICIES -> ASSETS ---
+Missing asset references: 0
+Policies per asset:
+count    4200.000000
+mean        2.752381
+std         1.526185
+min         1.000000
+25%         2.000000
+50%         2.000000
+75%         4.000000
+max         9.000000
+Name: count, dtype: float64
+
+--- CLAIMS -> POLICIES ---
+Missing policy references: 260
+Claims per policy:
+count    3156.000000
+mean        1.428707
+std         0.835610
+min         1.000000
+25%         1.000000
+50%         1.000000
+75%         2.000000
+max         9.000000
+Name: count, dtype: float64
+
+--- PORTFOLIOS ---
+portfolio_id
+PF-09    392
+PF-04    375
+PF-06    368
+PF-05    359
+PF-12    355
+PF-02    353
+PF-01    352
+PF-07    345
+PF-08    337
+PF-03    335
+PF-11    319
+PF-10    310
+
+==========================================================================================
+EXPLORATION COMPLETE
+==========================================================================================
